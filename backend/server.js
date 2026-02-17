@@ -10,12 +10,7 @@ require("dotenv").config();
 const app = express();
 connectDB();
 
-app.use(cors({
-    origin: "https://poetree-1.onrender.com",
-    credentials: true,
-  })
-);
-
+app.use(cors({}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
