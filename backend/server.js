@@ -8,10 +8,22 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-connectDB();
+
+const allowedOrigins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://poetree-1.onrender.com",
+    process.env.CLIENT_URL,
+].filter(Boolean);
 
 app.use(cors({
-    origin: "https://poetree-1.onrender.com",
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
     credentials: true,
 }));
 app.use(express.json());
@@ -23,6 +35,17 @@ app.use("/api/comments", commentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`server running on ${PORT}`);
-})
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(PORT, () => {
+            console.log(`server running on ${PORT}`);
+        });
+    } catch (err) {
+        console.error(`Server not started because MongoDB is unavailable: ${err.message}`);
+        process.exit(1);
+    }
+};
+
+startServer();

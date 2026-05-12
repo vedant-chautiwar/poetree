@@ -1,10 +1,10 @@
-import React from 'react'
+import React from "react";
 
-export default function CommentCard ({comment}) {
+export default function CommentCard({ comment }) {
   return (
-    <div className="bg-gray-100 p-2 rounded text-sm">
-        <b>{comment.user?.username}</b>
-        <p>{comment.text}</p>
+    <div className="comment-card">
+      <p className="text-sm font-extrabold text-[#24493d]">{comment.user?.username}</p>
+      <p className="mt-1 text-sm leading-6 text-[#435049]">{comment.text}</p>
     </div>
-  )
+  );
 }
