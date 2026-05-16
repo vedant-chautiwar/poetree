@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
@@ -5,15 +7,14 @@ const poemRoutes = require("./routes/poemRoutes");
 const userRoutes = require("./routes/userRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
 
 const allowedOrigins = [
     "http://localhost:5173",
+    "http://localhost:3000",
     "http://127.0.0.1:5173",
-    "https://poetree-1.onrender.com",
-    process.env.CLIENT_URL,
+    process.env.FRONTEND_URL,
 ].filter(Boolean);
 
 app.use(cors({
@@ -27,6 +28,10 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json());
+
+app.get("/api/health", (req, res) => {
+    res.json({ success: true, message: "Poetree API running" });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/poems", poemRoutes);
